@@ -1,0 +1,86 @@
+from PIL import Image, ImageDraw, ImageFont
+
+
+def basics():
+    # Dimensions LinkedIn
+    width, height = 2000, 800
+
+    # Couleurs
+    bg_color = (255, 255, 255)  # Fond blanc
+    text_color = 'black'
+    component_color = ['brown', 'black', 'grey']
+
+    # Créer image et dessin (fond blanc)
+    img = Image.new("RGB", (width, height), bg_color)
+    draw = ImageDraw.Draw(img)
+
+
+    # Charger une police
+    try:
+        font_large = ImageFont.truetype("arial.ttf", 30)
+        font_small = ImageFont.truetype("arial.ttf", 20)
+    except:
+        font_large = ImageFont.load_default()
+        font_small = ImageFont.load_default()
+    '''
+    # Texte principal
+    x = 100
+    draw.text((x, 20), "INGÉNIEUR ÉLECTRIQUE", fill=text_color, font=font_large)
+    draw.text((x, 120), "L marron, noir, gris", fill=text_color, font=font_large)
+    '''
+
+    # Retourner tous les objets nécessaires
+    return img, draw, height, font_small, component_color, text_color, width
+
+
+def star_component_terminals(
+        x_pos_gen, x_pos_loads, vpot, length_of_terminals, xgn, diameter, xg_phases2_3,
+        draw, component_color, width, terminals_offset):
+
+    # generator terminals
+    generator_terminals = [
+        [(x_pos_gen, vpot[0] - length_of_terminals), (x_pos_gen, vpot[0])],
+        [(x_pos_gen, vpot[0]), (xgn[0], vpot[1])],
+        [(x_pos_gen, vpot[0]), (xgn[1], vpot[1])],
+        [(x_pos_gen, vpot[0] - 2 * length_of_terminals - diameter),
+         (x_pos_gen, vpot[0] - length_of_terminals - diameter)],
+        [(xg_phases2_3[0], vpot[2]), (xg_phases2_3[1], vpot[3])],
+        [(xg_phases2_3[2], vpot[2]), (xg_phases2_3[3], vpot[3])],
+    ]
+
+    # loads terminals
+
+    xln = [
+        xgn[0] + terminals_offset,  # xln = x load neutral
+        xgn[1] + terminals_offset
+    ]
+
+    xl_phases_2_3 = [
+        xg_phases2_3[2] + terminals_offset,
+        xg_phases2_3[3] + terminals_offset,
+        xg_phases2_3[0] + terminals_offset,
+        xg_phases2_3[1] + terminals_offset
+    ]
+
+    loads_terminals = [
+        [(x_pos_loads, vpot[0] - length_of_terminals), (x_pos_loads, vpot[0])],
+        [(x_pos_loads, vpot[0]), (xln[1], vpot[1])],
+        [(x_pos_loads, vpot[0]), (xln[0], vpot[1])],
+        [(x_pos_loads, vpot[0] - 2 * length_of_terminals - diameter),
+         (x_pos_loads, vpot[0] - length_of_terminals - diameter)],
+        [(xl_phases_2_3[0], vpot[2]), (xl_phases_2_3[1], vpot[3])],
+        [(xl_phases_2_3[2], vpot[2]), (xl_phases_2_3[3], vpot[3])],
+    ]
+
+    # Première boucle avec component_color original
+    for i, terminal in enumerate(generator_terminals):
+        color = component_color[i % len(component_color)]
+        draw.line(terminal, fill=color, width=width)
+
+
+    for i, terminal in enumerate(loads_terminals):
+        color = component_color[i % len(component_color)]
+        draw.line(terminal, fill=color, width=width)
+
+    return xln, xl_phases_2_3, generator_terminals, loads_terminals
+

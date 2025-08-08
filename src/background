@@ -2,7 +2,7 @@ from PIL import Image, ImageDraw, ImageFont
 
 
 def basics():
-    # Dimensions LinkedIn
+    # Dimensions
     width, height = 2000, 800
 
     # Couleurs

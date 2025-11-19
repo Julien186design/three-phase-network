@@ -16,14 +16,14 @@ def draw_resistors(draw, r1, r2, r3, width):
         draw.line([start, end], fill=color, width=width)
 
 
-def resistors(draw, x_position_of_loads, xl_phases2_3, length_of_terminals,
+def resistors(draw, x_position_of_loads, diameter, xl_phases2_3, length_of_terminals,
               xln, vpot, component_color, width, width_of_loads):
 
     sqrt3_2 = math.sqrt(3) / 2
     # Calcul des coordonnées des bornes gauche et droite
     xr1 = [x_position_of_loads - width_of_loads // 2,
            x_position_of_loads + width_of_loads // 2]
-    yr1 = [vpot[0] - 2 * length_of_terminals,
+    yr1 = [vpot[0] - length_of_terminals - diameter,
            vpot[0] - length_of_terminals]
     xr2 = [xln[1] - width_of_loads // 4,
            xln[1] + width_of_loads // 4,
@@ -47,6 +47,8 @@ def resistors(draw, x_position_of_loads, xl_phases2_3, length_of_terminals,
         ((xr1[0], yr1[0]), (xr1[1], yr1[0]), component_color[0]),
         ((xr1[1], yr1[0]), (xr1[1], yr1[1]), component_color[0]),
     ]
+
+    print(r1)
 
     r2 = [((xr2[0], yr2_3[0]), (xr2[1], yr2_3[1]), component_color[1]),
         ((xr2[1], yr2_3[1]), (xr2[2], yr2_3[2]), component_color[1]),

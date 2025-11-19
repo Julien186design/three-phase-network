@@ -13,7 +13,7 @@ if __name__ == '__main__':
         'filename': "three-phase network.png",
         'length_of_terminals': 80,
         'diameter': 80,
-        'equipment_location': 4,
+        'equipment_location': 5,
         'width_of_loads': 50,
     }
 
@@ -34,7 +34,7 @@ if __name__ == '__main__':
         xgn, config['diameter'], xg_phases_2_3, draw, component_color, config['width'], terminals_offset)
 
     resistors(
-        draw, x_pos_loads, xl_phases2_3, config['length_of_terminals'], xln, vpot,
+        draw, x_pos_loads, config['diameter'], xl_phases2_3, config['length_of_terminals'], xln, vpot,
         component_color, config['width'], width_of_loads=config['width_of_loads']
     )
 

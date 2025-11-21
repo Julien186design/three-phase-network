@@ -3,31 +3,34 @@ def extraire_coordonnees_infos(segments):
     x_coords = [point[0] for segment in segments for point in segment]
     y_coords = [point[1] for segment in segments for point in segment]
 
-    # Trouver les min/max pour les y
-    y_min = min(y_coords)
-    y_max = max(y_coords)
+    return x_coords, y_coords
 
-    return x_coords, y_min, y_max
+def phases_and_neutral(draw, generator_terminals, terminals_offset, neutral_offset, component_color, width):
+    x_vals, y_vals = extraire_coordonnees_infos(generator_terminals)
 
-def phases(draw, generator_terminals, terminals_offset, component_color, width):
-    x_vals, y_p1, y_p2 = extraire_coordonnees_infos(generator_terminals)
-    x_uniques = sorted(set(x_vals))
-    y_p3 = y_p2 + 100
+    x_vals = sorted(set(x_vals))
+    y_vals = sorted(set(y_vals))
+    third_phase_down = y_vals[-1] + 100
 
     phase_coordinates = [
-        [(x_uniques[3], y_p1), (x_uniques[3] + terminals_offset, y_p1)],
-        [(x_uniques[6], y_p2), (x_uniques[0] + terminals_offset, y_p2)],
-        [(x_uniques[0], y_p2), (x_uniques[0], y_p3)],
-        [(x_uniques[0], y_p3), (x_uniques[6] + terminals_offset, y_p3)],
-        [(x_uniques[6] + terminals_offset, y_p3), (x_uniques[6] + terminals_offset, y_p2)]
+        [(x_vals[3], y_vals[0]), (x_vals[3] + terminals_offset, y_vals[0])], #1st phase
+        [(x_vals[6], y_vals[-1]), (x_vals[0] + terminals_offset, y_vals[-1])] #2nd phase
     ]
 
-    # Points de la polyligne unique
-    polyline_points = [
-        (x_uniques[0], y_p2),
-        (x_uniques[0], y_p3),
-        (x_uniques[6] + terminals_offset, y_p3),
-        (x_uniques[6] + terminals_offset, y_p2)
+    third_phase = [
+        (x_vals[0], y_vals[-1]),
+        (x_vals[0], third_phase_down),
+        (x_vals[6] + terminals_offset, third_phase_down),
+        (x_vals[6] + terminals_offset, y_vals[-1])
+    ]
+
+    neutral = [
+        (x_vals[3], y_vals[3]),
+        (x_vals[0] - neutral_offset, y_vals[3]),
+        (x_vals[0] - neutral_offset, third_phase_down + neutral_offset),
+        (x_vals[6] + neutral_offset + terminals_offset, third_phase_down + neutral_offset),
+        (x_vals[6] + neutral_offset + terminals_offset, y_vals[3]),
+        (x_vals[3] + terminals_offset, y_vals[3])
     ]
 
     # Pour les autres lignes, on trace individuellement
@@ -36,6 +39,11 @@ def phases(draw, generator_terminals, terminals_offset, component_color, width):
         draw.line(phase_coordinates[i], fill=color, width=width)
 
     # Tracer la polyligne gris pour les 3 dernières lignes en une seule fois
-    draw.line(polyline_points, fill='grey', width=width)
+    draw.line(third_phase, fill='grey', width=width)
+    draw.line(neutral, fill='blue', width=width)
+
+
+    print(f"\nphase_coordinates{phase_coordinates}")
+    print(f"third_phase{third_phase}")
 
 

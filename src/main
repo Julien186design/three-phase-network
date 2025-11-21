@@ -1,7 +1,7 @@
 from background import basics, star_component_terminals
 from generator import three_phase_generator
 from loads import resistors
-from cables import phases
+from cables import phases_and_neutral
 
 
 if __name__ == '__main__':
@@ -15,6 +15,7 @@ if __name__ == '__main__':
         'diameter': 80,
         'equipment_location': 5,
         'width_of_loads': 50,
+        'neutral_offset' : 100
     }
 
     x_pos_gen = picture_width // config['equipment_location']  # x_position_of_generator
@@ -38,5 +39,9 @@ if __name__ == '__main__':
         component_color, config['width'], width_of_loads=config['width_of_loads']
     )
 
-    phases(draw, generator_terminals, terminals_offset, component_color, config['width'])
+    print(f"\nxg_phases_2_3{xg_phases_2_3}")
+    print(f"xl_phases_2_3{xl_phases2_3}")
+
+    phases_and_neutral(draw, generator_terminals, terminals_offset,
+                       config['neutral_offset'], component_color, config['width'])
     img.save(config['filename'])

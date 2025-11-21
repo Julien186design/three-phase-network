@@ -43,7 +43,4 @@ def phases_and_neutral(draw, generator_terminals, terminals_offset, neutral_offs
     draw.line(neutral, fill='blue', width=width)
 
 
-    print(f"\nphase_coordinates{phase_coordinates}")
-    print(f"third_phase{third_phase}")
-
 

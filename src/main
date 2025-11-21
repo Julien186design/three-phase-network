@@ -39,9 +39,6 @@ if __name__ == '__main__':
         component_color, config['width'], width_of_loads=config['width_of_loads']
     )
 
-    print(f"\nxg_phases_2_3{xg_phases_2_3}")
-    print(f"xl_phases_2_3{xl_phases2_3}")
-
     phases_and_neutral(draw, generator_terminals, terminals_offset,
                        config['neutral_offset'], component_color, config['width'])
     img.save(config['filename'])

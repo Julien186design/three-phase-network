@@ -2,50 +2,46 @@ from PIL import Image, ImageDraw, ImageFont
 
 
 def basics():
-    # Dimensions
     width, height = 2000, 800
 
-    # Couleurs
-    bg_color = (255, 255, 255)  # Fond blanc
+    bg_color = (255, 255, 255)
     text_color = 'black'
-    component_color = ['brown', 'black', 'grey']
+    color_map = {
+        'brown': (255, 64, 64),
+        'black': (0, 0, 0),
+        'grey': (128, 128, 128)
+    }
 
-    # Créer image et dessin (fond blanc)
+    component_color = ['brown', 'black', 'grey']
+    component_color_rgb = [color_map[color] for color in component_color]
+
+
     img = Image.new("RGB", (width, height), bg_color)
     draw = ImageDraw.Draw(img)
 
 
-    # Charger une police
     try:
-        font_large = ImageFont.truetype("arial.ttf", 30)
         font_small = ImageFont.truetype("arial.ttf", 20)
     except:
-        font_large = ImageFont.load_default()
         font_small = ImageFont.load_default()
-    '''
-    # Texte principal
-    x = 100
-    draw.text((x, 20), "INGÉNIEUR ÉLECTRIQUE", fill=text_color, font=font_large)
-    draw.text((x, 120), "L marron, noir, gris", fill=text_color, font=font_large)
-    '''
 
-    # Retourner tous les objets nécessaires
-    return img, draw, height, font_small, component_color, text_color, width
+
+    return img, draw, height, font_small, component_color_rgb, text_color, width
 
 
 def star_component_terminals(
-        x_pos_gen, x_pos_loads, vpot, length_of_terminals, xgn, diameter, xg_phases2_3,
-        draw, component_color, width, terminals_offset):
+        x_pos_gen, x_pos_loads, vertical_position_of_terminals, length_of_terminals, xgn, diameter, xg_phases2_3,
+        draw, component_color_rgb, width, terminals_offset):
 
     # generator terminals
     generator_terminals = [
-        [(x_pos_gen, vpot[0] - length_of_terminals), (x_pos_gen, vpot[0])],
-        [(x_pos_gen, vpot[0]), (xgn[0], vpot[1])],
-        [(x_pos_gen, vpot[0]), (xgn[1], vpot[1])],
-        [(x_pos_gen, vpot[0] - 2 * length_of_terminals - diameter),
-         (x_pos_gen, vpot[0] - length_of_terminals - diameter)],
-        [(xg_phases2_3[0], vpot[2]), (xg_phases2_3[1], vpot[3])],
-        [(xg_phases2_3[2], vpot[2]), (xg_phases2_3[3], vpot[3])],
+        [(x_pos_gen, vertical_position_of_terminals[0] - length_of_terminals), (x_pos_gen, vertical_position_of_terminals[0])],
+        [(x_pos_gen, vertical_position_of_terminals[0]), (xgn[0], vertical_position_of_terminals[1])],
+        [(x_pos_gen, vertical_position_of_terminals[0]), (xgn[1], vertical_position_of_terminals[1])],
+        [(x_pos_gen, vertical_position_of_terminals[0] - 2 * length_of_terminals - diameter),
+         (x_pos_gen, vertical_position_of_terminals[0] - length_of_terminals - diameter)],
+        [(xg_phases2_3[0], vertical_position_of_terminals[2]), (xg_phases2_3[1], vertical_position_of_terminals[3])],
+        [(xg_phases2_3[2], vertical_position_of_terminals[2]), (xg_phases2_3[3], vertical_position_of_terminals[3])],
     ]
 
     # loads terminals
@@ -63,23 +59,23 @@ def star_component_terminals(
     ]
 
     loads_terminals = [
-        [(x_pos_loads, vpot[0] - length_of_terminals), (x_pos_loads, vpot[0])],
-        [(x_pos_loads, vpot[0]), (xln[1], vpot[1])],
-        [(x_pos_loads, vpot[0]), (xln[0], vpot[1])],
-        [(x_pos_loads, vpot[0] - 2 * length_of_terminals - diameter),
-         (x_pos_loads, vpot[0] - length_of_terminals - diameter)],
-        [(xl_phases_2_3[0], vpot[2]), (xl_phases_2_3[1], vpot[3])],
-        [(xl_phases_2_3[2], vpot[2]), (xl_phases_2_3[3], vpot[3])],
+        [(x_pos_loads, vertical_position_of_terminals[0] - length_of_terminals), (x_pos_loads, vertical_position_of_terminals[0])],
+        [(x_pos_loads, vertical_position_of_terminals[0]), (xln[1], vertical_position_of_terminals[1])],
+        [(x_pos_loads, vertical_position_of_terminals[0]), (xln[0], vertical_position_of_terminals[1])],
+        [(x_pos_loads, vertical_position_of_terminals[0] - 2 * length_of_terminals - diameter),
+         (x_pos_loads, vertical_position_of_terminals[0] - length_of_terminals - diameter)],
+        [(xl_phases_2_3[0], vertical_position_of_terminals[2]), (xl_phases_2_3[1], vertical_position_of_terminals[3])],
+        [(xl_phases_2_3[2], vertical_position_of_terminals[2]), (xl_phases_2_3[3], vertical_position_of_terminals[3])],
     ]
 
-    # Première boucle avec component_color original
+
     for i, terminal in enumerate(generator_terminals):
-        color = component_color[i % len(component_color)]
+        color = component_color_rgb[i % len(component_color_rgb)]
         draw.line(terminal, fill=color, width=width)
 
 
     for i, terminal in enumerate(loads_terminals):
-        color = component_color[i % len(component_color)]
+        color = component_color_rgb[i % len(component_color_rgb)]
         draw.line(terminal, fill=color, width=width)
 
     return xln, xl_phases_2_3, generator_terminals, loads_terminals

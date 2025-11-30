@@ -1,12 +1,12 @@
-def extraire_coordonnees_infos(segments):
-    # Extraire toutes les coordonnées x et y
-    x_coords = [point[0] for segment in segments for point in segment]
-    y_coords = [point[1] for segment in segments for point in segment]
+def extract_xy_coordinates(segments):
 
-    return x_coords, y_coords
+    x_coordinates = [point[0] for segment in segments for point in segment]
+    y_coordinates = [point[1] for segment in segments for point in segment]
+
+    return x_coordinates, y_coordinates
 
 def phases_and_neutral(draw, generator_terminals, terminals_offset, neutral_offset, component_color, width):
-    x_vals, y_vals = extraire_coordonnees_infos(generator_terminals)
+    x_vals, y_vals = extract_xy_coordinates(generator_terminals)
 
     x_vals = sorted(set(x_vals))
     y_vals = sorted(set(y_vals))
@@ -33,14 +33,11 @@ def phases_and_neutral(draw, generator_terminals, terminals_offset, neutral_offs
         (x_vals[3] + terminals_offset, y_vals[3])
     ]
 
-    # Pour les autres lignes, on trace individuellement
-    for i in range(2):  # index 0 et 1 forment d'autres segments à tracer individuellement
+
+    for i in range(2):
         color = component_color[i]
         draw.line(phase_coordinates[i], fill=color, width=width)
 
-    # Tracer la polyligne gris pour les 3 dernières lignes en une seule fois
     draw.line(third_phase, fill='grey', width=width)
     draw.line(neutral, fill='blue', width=width)
-
-
 

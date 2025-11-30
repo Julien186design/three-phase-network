@@ -5,7 +5,7 @@ from cables import phases_and_neutral
 
 
 if __name__ == '__main__':
-    # Initialisation basique et paramètres
+
     img, draw, height, font_small, component_color, text_color, picture_width = basics()
 
     config = {
@@ -18,25 +18,25 @@ if __name__ == '__main__':
         'neutral_offset' : 100
     }
 
-    x_pos_gen = picture_width // config['equipment_location']  # x_position_of_generator
-    x_pos_loads = x_pos_gen * (config['equipment_location'] - 1)
-    terminals_offset = x_pos_gen * (config['equipment_location'] - 2)
+    x_position_generator = picture_width // config['equipment_location']
+    x_pos_loads = x_position_generator * (config['equipment_location'] - 1)
+    terminals_offset = x_position_generator * (config['equipment_location'] - 2)
 
-    # Génération du réseau
 
-    len_terms, xg_phases_2_3, vpot, xgn = three_phase_generator(
-        draw, height, config['width'], x_pos_gen, component_color,
+    len_terms, xg_phases_2_3, vertical_position_of_terminals, xgn = three_phase_generator(
+        draw, height, config['width'], x_position_generator, component_color,
         length_of_terminals=config['length_of_terminals'],
-        diameter=config['diameter'],
-        equipment_location=config['equipment_location']
+        diameter=config['diameter']
     )
+
     xln, xl_phases2_3, generator_terminals, loads_terminals = star_component_terminals(
-        x_pos_gen, x_pos_loads, vpot, config['length_of_terminals'],
+        x_position_generator, x_pos_loads, vertical_position_of_terminals, config['length_of_terminals'],
         xgn, config['diameter'], xg_phases_2_3, draw, component_color, config['width'], terminals_offset)
 
+
     resistors(
-        draw, x_pos_loads, config['diameter'], xl_phases2_3, config['length_of_terminals'], xln, vpot,
-        component_color, config['width'], width_of_loads=config['width_of_loads']
+        draw, x_pos_loads, config['diameter'], xl_phases2_3, config['length_of_terminals'],
+        xln, vertical_position_of_terminals, component_color, config['width'], width_of_loads=config['width_of_loads']
     )
 
     phases_and_neutral(draw, generator_terminals, terminals_offset,

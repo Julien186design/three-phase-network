@@ -2,29 +2,21 @@ import math
 
 
 def draw_resistors(draw, r1, r2, r3, width):
-    """
-    Dessine les segments décrits dans r1, r2 et r3 sur le contexte 'draw'.
 
-    :param draw: objet PIL.ImageDraw.Draw
-    :param r1: liste de tuples ((x1, y1), (x2, y2), couleur)
-    :param r2: liste de tuples ((x1, y1), (x2, y2), couleur)
-    :param r3: liste de tuples ((x1, y1), (x2, y2), couleur)
-    :param width: largeur du trait
-    """
     for line in r1 + r2 + r3:
         start, end, color = line
         draw.line([start, end], fill=color, width=width)
 
 
 def resistors(draw, x_position_of_loads, diameter, xl_phases2_3, length_of_terminals,
-              xln, vpot, component_color, width, width_of_loads):
+              xln, vertical_position_of_terminals, component_color, width, width_of_loads):
 
     sqrt3_2 = math.sqrt(3) / 2
-    # Calcul des coordonnées des bornes gauche et droite
+    # Calculation of the coordinates of the left and right terminals
     xr1 = [x_position_of_loads - width_of_loads // 2,
            x_position_of_loads + width_of_loads // 2]
-    yr1 = [vpot[0] - length_of_terminals - diameter,
-           vpot[0] - length_of_terminals]
+    yr1 = [vertical_position_of_terminals[0] - length_of_terminals - diameter,
+           vertical_position_of_terminals[0] - length_of_terminals]
     xr2 = [xln[1] - width_of_loads // 4,
            xln[1] + width_of_loads // 4,
            xl_phases2_3[0] + width_of_loads // 4,
@@ -33,13 +25,12 @@ def resistors(draw, x_position_of_loads, diameter, xl_phases2_3, length_of_termi
            xln[0] - width_of_loads // 4,
            xl_phases2_3[2] - width_of_loads // 4,
            xl_phases2_3[2] + width_of_loads // 4]
-    yr2_3 = [vpot[1] - round(sqrt3_2 * width_of_loads // 2),
-             vpot[1] + round(sqrt3_2 * width_of_loads // 2),
-             vpot[2] + round(sqrt3_2 * width_of_loads // 2),
-             vpot[2] - round(sqrt3_2 * width_of_loads // 2)]
+    yr2_3 = [vertical_position_of_terminals[1] - round(sqrt3_2 * width_of_loads // 2),
+             vertical_position_of_terminals[1] + round(sqrt3_2 * width_of_loads // 2),
+             vertical_position_of_terminals[2] + round(sqrt3_2 * width_of_loads // 2),
+             vertical_position_of_terminals[2] - round(sqrt3_2 * width_of_loads // 2)]
 
-    
-    # Définition des lignes à dessiner : chaque tuple contient ((x1, y1), (x2, y2), couleur)
+
     r1 = [
 
         ((xr1[0], yr1[0]), (xr1[0], yr1[1]), component_color[0]),
@@ -48,7 +39,6 @@ def resistors(draw, x_position_of_loads, diameter, xl_phases2_3, length_of_termi
         ((xr1[1], yr1[0]), (xr1[1], yr1[1]), component_color[0]),
     ]
 
-    print(r1)
 
     r2 = [((xr2[0], yr2_3[0]), (xr2[1], yr2_3[1]), component_color[1]),
         ((xr2[1], yr2_3[1]), (xr2[2], yr2_3[2]), component_color[1]),
@@ -61,6 +51,5 @@ def resistors(draw, x_position_of_loads, diameter, xl_phases2_3, length_of_termi
           ((xr3[3], yr2_3[3]), (xr3[0], yr2_3[0]), component_color[2]),
           ]
 
-    # Dessin des lignes
     draw_resistors(draw, r1, r2, r3, width)
 

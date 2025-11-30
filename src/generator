@@ -2,10 +2,10 @@ import math
 
 
 def three_phase_generator_terminals(
-        xpol, length_of_terminals, diameter, height, rayon, draw, component_color, width, equipment_location):
+        xpol, length_of_terminals, diameter, height, rayon):
     sqrt3_2 = math.sqrt(3) / 2
-    vpot = [height // 2] # vertical_position_of_terminals
-    # Points principaux
+    vertical_position_of_terminals = [height // 2]
+    # Principal points
     xgn = [ # xgn = x generator neutral
         round(xpol + length_of_terminals * sqrt3_2),
         round(xpol - length_of_terminals * sqrt3_2)
@@ -20,43 +20,42 @@ def three_phase_generator_terminals(
         round(xpol - (2 * length_of_terminals + diameter) * sqrt3_2)
     ]
 
-    vpot.append(vpot[0] + length_of_terminals // 2)
-    vpot.append(vpot[1] + rayon)
-    vpot.append(vpot[2] + length_of_terminals // 2)
+    vertical_position_of_terminals.append(vertical_position_of_terminals[0] + length_of_terminals // 2)
+    vertical_position_of_terminals.append(vertical_position_of_terminals[1] + rayon)
+    vertical_position_of_terminals.append(vertical_position_of_terminals[2] + length_of_terminals // 2)
 
-    return xgn, vpot, xg_phases_2_3
+    return xgn, vertical_position_of_terminals, xg_phases_2_3
 
 
 def three_phase_generator(
-        draw, height, width, xpol, component_color, length_of_terminals, diameter, equipment_location):
-    # Pré-calculs
+        draw, height, width, xpol, component_color, length_of_terminals, diameter):
+    # pre-calculations
     rayon = diameter // 2
 
+    xgn, vertical_position_of_terminals, xg_phases2_3 = three_phase_generator_terminals(
+        xpol, length_of_terminals, diameter, height, rayon)
 
-    xgn, vpot, xg_phases2_3 = three_phase_generator_terminals(
-        xpol, length_of_terminals, diameter, height, rayon, draw, component_color, width, equipment_location)
-
-    # Cercle principal
+    # Principal circle
     draw.ellipse(
-        (xpol - rayon, vpot[0] - length_of_terminals - diameter, xpol + rayon, vpot[0] - length_of_terminals),
+        (xpol - rayon, vertical_position_of_terminals[0] - length_of_terminals - diameter, xpol + rayon, vertical_position_of_terminals[0] - length_of_terminals),
         outline=component_color[0], width=width)
 
-    # Calculs pour les cercles du bas
+    # Calculations for the bottom circles
     center1_x = (xpol + xgn[0]) // 2
-    center1_y = (vpot[0] + vpot[1]) // 2
+    center1_y = (vertical_position_of_terminals[0] + vertical_position_of_terminals[1]) // 2
     center2_x = (xg_phases2_3[0] + xg_phases2_3[1]) // 2
-    center2_y = (vpot[2] + vpot[3]) // 2
+    center2_y = (vertical_position_of_terminals[2] + vertical_position_of_terminals[3]) // 2
 
     circle_center_x2 = (center1_x + center2_x) // 2
     horizontal_offset = circle_center_x2 - xpol
     circle_center_x3 = xpol - horizontal_offset
     center_between_y = (center1_y + center2_y) // 2
 
-    # Cercles du bas — CORRIGÉ
+    # Bottom circles
     for i, cx in enumerate([circle_center_x2, circle_center_x3]):
         color = component_color[(i + 1) % len(component_color)]
         draw.ellipse(
             (cx - rayon, center_between_y - rayon, cx + rayon, center_between_y + rayon),
             outline=color, width=width)
 
-    return length_of_terminals, xg_phases2_3, vpot, xgn
+    return length_of_terminals, xg_phases2_3, vertical_position_of_terminals, xgn

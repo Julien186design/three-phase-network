@@ -6,7 +6,7 @@ from cables import phases_and_neutral
 
 if __name__ == '__main__':
 
-    img, draw, height, font_small, component_color, text_color, picture_width = basics()
+    img, draw, height, font_small, component_color, picture_width = basics()
 
     config = {
         'width': 10,
